@@ -9,6 +9,7 @@ public abstract class LoopObjectMover : MonoBehaviour
     [SerializeField] protected float ResetPosition;
     [SerializeField] protected Vector3 PlusValue;
 
+
     protected void Update()
     {
         transform.position -= PlusValue * Speed * Time.deltaTime;
@@ -17,4 +18,6 @@ public abstract class LoopObjectMover : MonoBehaviour
     protected virtual void CheckPosition()
     {  
     }
+
+
 }
