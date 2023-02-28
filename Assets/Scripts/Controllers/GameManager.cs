@@ -6,8 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private SoundPlayer _soundPlayer;
     [SerializeField] private Bird _bird;
     [SerializeField] private View _view;
+
+    private bool _gameOver = false;
     private int _score;
 
 
@@ -18,6 +21,7 @@ public class GameManager : MonoBehaviour
         _bird.OnTouchScore += OnScoreChanged;
         _view.OnClickStartButton += OnStartGame;
         _view.OnClickRestartButton += OnRestartGame;
+        _view.OnClickJumpButton += OnPlayJumpSound;
 
     }
     private void OnDisable()
@@ -26,14 +30,19 @@ public class GameManager : MonoBehaviour
         _bird.OnTouchScore -= OnScoreChanged;
         _view.OnClickStartButton -= OnStartGame;
         _view.OnClickRestartButton -= OnRestartGame;
+        _view.OnClickJumpButton -= OnPlayJumpSound;
     }
     private void OnEndGame()
     {
+        if(!_gameOver)
+        _soundPlayer.PlayHitSound();
+        _gameOver = true;
         BaseObjectsHandler.Instance.StopAllObjects();
     }
     private void OnScoreChanged()
     {
         _score++;
+        _soundPlayer.PlayPointSound();
         _view.SetScoreText(_score.ToString());
     }
     private void OnStartGame()
@@ -46,5 +55,8 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
-
+    private void OnPlayJumpSound()
+    {
+        _soundPlayer.PlayWingSound();
+    }
 }
