@@ -29,6 +29,7 @@ public class Bird :BaseObject
         if(collision.gameObject.TryGetComponent(out Pipe pipe))
         {
             OnTouchPipe?.Invoke();
+        GetComponent<Collider2D>().enabled= false;
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)

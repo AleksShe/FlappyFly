@@ -7,8 +7,13 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private SoundPlayer _soundPlayer;
+    [SerializeField] private CameraFlash _cameraFlash;
     [SerializeField] private Bird _bird;
     [SerializeField] private View _view;
+    private void Awake()
+    {
+        _cameraFlash.CameraFlashStart();
+    }
 
     private bool _gameOver = false;
     private int _score;
