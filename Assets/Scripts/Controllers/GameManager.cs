@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.SearchService;
@@ -10,6 +11,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CameraFlash _cameraFlash;
     [SerializeField] private Bird _bird;
     [SerializeField] private View _view;
+
+    private ServerConnection _serverConnection = new ServerConnection();
     private void Awake()
     {
         _cameraFlash.CameraFlashStart();
@@ -27,6 +30,7 @@ public class GameManager : MonoBehaviour
         _view.OnClickStartButton += OnStartGame;
         _view.OnClickRestartButton += OnRestartGame;
         _view.OnClickJumpButton += OnPlayJumpSound;
+        _view.OnClickLeaderBoardButton += OnGetAllPlayers;
 
     }
     private void OnDisable()
@@ -36,6 +40,7 @@ public class GameManager : MonoBehaviour
         _view.OnClickStartButton -= OnStartGame;
         _view.OnClickRestartButton -= OnRestartGame;
         _view.OnClickJumpButton -= OnPlayJumpSound;
+        _view.OnClickLeaderBoardButton -= OnGetAllPlayers;
     }
     private void OnEndGame()
     {
@@ -43,6 +48,17 @@ public class GameManager : MonoBehaviour
         _soundPlayer.PlayHitSound();
         _gameOver = true;
         BaseObjectsHandler.Instance.StopAllObjects();
+        Player player = new Player() { Date = DateTime.Now.ToString(), Score = _score };
+        _serverConnection.SentPlayerToAdd(player);
+    }
+    private void OnGetAllPlayers()
+    {
+        string players = "";
+        foreach (var player in _serverConnection.Get())
+        {
+            players += player.Date + "\n " + player.Score +"\n ";
+        }
+        _view.ShowLeaderBoard(players);
     }
     private void OnScoreChanged()
     {
